@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewH = 440;
     const centerX = viewW / 2;
     const centerY = viewH / 2;
-    const maxR = 90;
+    const maxR = 100;
 
     // 8軸を均等配置(上から時計回り)。行動系と内面・思考系を交互に並べてバランスを取る
     // 4つの対(挑戦⇔安定、リーダー⇔職人、関わり⇔単独、論理⇔感受性)が
@@ -913,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
 
     // ラベル配置: 各軸の角度方向に沿って外側に置き、水平方向の位置に応じてtext-anchorを切り替える
-    const labelGap = 20;
+    const labelGap = 16;
     const labelHtml = order.map((key, i) => {
       const a = angles[i];
       const rad = (a * Math.PI) / 180;
