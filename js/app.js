@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     jobMatchedCandidate: null, // true: 提示した候補から選んだ(想定内) / false: その他で自由入力(想定外)
     feeling: null,
     wish: '',
+    priority: null,
   };
 
   const screens = {
@@ -458,6 +459,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   wishOtherInput.addEventListener('input', () => { state.wish = wishOtherInput.value; });
 
+  /* ---------------- 「これから先、大事にしたいこと」(任意) ---------------- */
+  const priorityButtons = document.querySelectorAll('#q-priority .choice-card');
+  priorityButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      priorityButtons.forEach((b) => b.classList.remove('is-selected'));
+      btn.classList.add('is-selected');
+      state.priority = btn.dataset.value;
+    });
+  });
+
+  /* 「大事にしたいこと」の回答を、提案プール(6件)が持つ既存のtag(気持ちに対応するラベル)に
+     マッピングし、selectSuggestions()での優先度ボーナスに再利用する */
+  const priorityTagMap = {
+    comfort: 'continue',       // 心と時間の余裕 → 無理のない選択を示すcontinueタグ
+    reward: 'unrewarded',      // 収入・評価 → 正当な対価を示すunrewardedタグ
+    stimulation: 'repetition', // 挑戦・刺激 → 変化を示すrepetitionタグ
+    contribution: 'neutral',   // 人の役に立つ実感 → 助言・指導系が多いneutralタグ
+    autonomy: 'other-desire',  // 自分の裁量・自由 → 独立志向のother-desireタグ
+    none: null,
+  };
+
   document.getElementById('btn-diagnose').addEventListener('click', () => {
     goTo('result');
     runDiagnosis();
@@ -759,19 +781,20 @@ document.addEventListener('DOMContentLoaded', () => {
   function matchScores(seed) {
     const h = hashStr(seed);
     const primary = 80 + (h % 15); // 80-94
-    const secondary = 62 + ((h >> 3) % 18); // 62-79
-    const third = 48 + ((h >> 6) % 14); // 48-61
-    const fourth = 35 + ((h >> 9) % 13); // 35-47
+    const secondary = 62 + ((h >>> 3) % 18); // 62-79
+    const third = 48 + ((h >>> 6) % 14); // 48-61
+    const fourth = 35 + ((h >>> 9) % 13); // 35-47
     return [primary, secondary, third, fourth];
   }
 
-  /* プール(6件)から、回答内容(気持ち)に重みをつけつつ、入力内容をシードにした
-     擬似ランダムで4件を選ぶ。同じ回答なら毎回同じ4件になる(決定的)。 */
-  function selectSuggestions(pool, seed, feeling) {
+  /* プール(6件)から、回答内容(気持ち・大事にしたいこと)に重みをつけつつ、
+     入力内容をシードにした擬似ランダムで4件を選ぶ。同じ回答なら毎回同じ4件になる(決定的)。 */
+  function selectSuggestions(pool, seed, feeling, priorityTag) {
     const h = hashStr(seed);
     const scored = pool.map((item, i) => {
-      let score = (h >> (i * 4)) % 100; // 0-99の擬似ランダム基礎点(項目ごとに異なるビット位置を参照)
+      let score = (h >>> (i * 4)) % 100; // 0-99の擬似ランダム基礎点(項目ごとに異なるビット位置を参照)
       if (item.tag === feeling) score += 45; // 今の気持ちに合う提案を優先しやすくする
+      if (priorityTag && item.tag === priorityTag) score += 25; // 大事にしたいことに合う提案も、控えめに優先する
       if (item.tag === 'neutral') score += 15; // 汎用的な提案の底上げ
       return { item, score };
     });
@@ -783,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rest = scored.slice(3);
     let wildcardPick = null;
     if (rest.length > 0) {
-      const wildcardIndex = (h >> 20) % rest.length;
+      const wildcardIndex = (h >>> 20) % rest.length;
       wildcardPick = rest[wildcardIndex];
     }
     const finalList = wildcardPick ? [...top3, wildcardPick] : scored.slice(0, 4);
@@ -1102,10 +1125,11 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // マッチ度つきの提案カード(6件のプールから、気持ちの回答で重み付けした4件を選ぶ)
-      const seed = `${job}|${state.feeling}|${zodiac}|${wish}`;
+      // マッチ度つきの提案カード(6件のプールから、気持ち・大事にしたいことの回答で重み付けした4件を選ぶ)
+      const priorityTag = priorityTagMap[state.priority] || null;
+      const seed = `${job}|${state.feeling}|${zodiac}|${wish}|${state.priority || ''}`;
       const scores = matchScores(seed);
-      const selectedSuggestions = selectSuggestions(translation.suggestions, seed, state.feeling);
+      const selectedSuggestions = selectSuggestions(translation.suggestions, seed, state.feeling, priorityTag);
       let suggestionHtml = selectedSuggestions.map((s, i) => `
         <div class="suggestion-card">
           <div class="suggestion-head">
@@ -1160,9 +1184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     state.jobMatchedCandidate = null;
     state.feeling = null;
     state.wish = '';
+    state.priority = null;
 
     genderButtons.forEach((b) => b.classList.remove('is-selected'));
     feelingButtons.forEach((b) => b.classList.remove('is-selected'));
+    priorityButtons.forEach((b) => b.classList.remove('is-selected'));
     birthdayInput.value = '1980-04-02';
     jobChoicesContainer.querySelectorAll('.choice-card').forEach((b) => b.classList.remove('is-selected'));
     jobOtherInput.style.display = 'none';
