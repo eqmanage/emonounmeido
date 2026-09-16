@@ -412,6 +412,75 @@ input[type="text"]:focus {
   border-top: 1px dashed var(--line);
 }
 
+/* 「もっと詳しく知る」トグルボタンと詳細パネル */
+.suggestion-detail-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--navy-2);
+  color: var(--navy-2);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.suggestion-detail-toggle:hover {
+  background: var(--paper);
+}
+.suggestion-detail-toggle.is-open {
+  background: var(--navy-2);
+  color: var(--paper);
+}
+
+.suggestion-detail {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--line);
+}
+
+.suggestion-detail-heading {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.suggestion-detail-heading:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.suggestion-detail-points {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+.suggestion-detail-points li {
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+.suggestion-detail-points li:last-child { margin-bottom: 0; }
+
+.suggestion-detail-links {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+.suggestion-detail-links li {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+.suggestion-detail-links a {
+  color: var(--navy-2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.suggestion-detail-links a:hover { color: var(--navy); }
+
 /* ==========================================================================
    結果: 傾向レーダーチャート
    ========================================================================== */

@@ -535,12 +535,36 @@ document.addEventListener('DOMContentLoaded', () => {
       essence: '人との関係を築き、数字という結果に落とし込む力',
       peopleFacing: true,
       suggestions: [
-        { job: '独立系の営業代行・コンサルタント', reason: 'これまで培った関係構築力を、特定の会社ではなく自分の看板で活かす道があります。', episode: '特定の商品を売る力ではなく、人との関係を築く力そのものを、自分の看板で使う道があります。', tag: 'continue' },
+        { job: '独立系の営業代行・コンサルタント', reason: 'これまで培った関係構築力を、特定の会社ではなく自分の看板で活かす道があります。', episode: '特定の商品を売る力ではなく、人との関係を築く力そのものを、自分の看板で使う道があります。', tag: 'continue',
+          detail: {
+            points: [
+              '営業代行は、扱う商品知識よりも「初対面の相手と短期間で信頼関係を築く力」が最も評価される仕事です。日々新しい商談相手に向き合ってきた経験が、そのまま強みになります。',
+              '成果報酬型の契約が主流のため、数字で結果を示すことに慣れている点は大きな武器になります。',
+              '会社の看板に頼らず、自分の実績で契約を獲得する働き方のため、これまでの営業成績や紹介実績が、そのまま自分自身の価値になります。',
+            ],
+            links: [
+              { title: '営業代行フリーランスってどんな働き方？必要スキルや案件獲得方法を解説！', url: 'https://coeteco.jp/articles/13133' },
+              { title: 'フリーランス営業代行の始め方！仕事内容や年収、案件獲得のコツを解説', url: 'https://freeconsultant.jp/column/c441/' },
+            ],
+          },
+        },
         { job: 'カスタマーサクセス', reason: '売ることだけでなく、相手を成功に導く力として応用できます。', episode: '契約を取るまでで終わらせず、その後の関係を大切にしてきた姿勢は、顧客の成功を支える仕事にそのまま向いています。', tag: 'unrewarded' },
               { job: 'クラウドファンディングの企画運営', reason: '人を巻き込み、共感を集める力を、プロジェクト単位で発揮できます。', episode: '商品を売るのではなく想いを伝えてきた経験は、共感を資金に変えるクラウドファンディングの仕事と相性が良いです。', tag: 'repetition' },
         { job: '講演・研修講師', reason: '説得力のある話し方を、営業以外の場でも伝える仕事に活かせます。', episode: '商談で鍛えてきた「伝わる話し方」は、研修やセミナーの講師業でもそのまま武器になります。', tag: 'other-desire' },
         { job: '地域の特産品を紹介する仕事', reason: '焦らず、人と関わる力を活かせる場所を探る時間を持つのも良い選択です。', episode: 'すぐに答えを出さなくても、人と話す力を活かせる別の場所を、少しずつ探ってみる道もあります。', tag: 'vague' },
-        { job: '営業研修・OJTトレーナー', reason: '培ってきた営業スキルを、後進の育成という形で活かせます。', episode: '数字を作ってきた経験は、次の世代に営業の型を伝える仕事でも、確かな説得力を持ちます。', tag: 'neutral' },
+        { job: '営業研修・OJTトレーナー', reason: '培ってきた営業スキルを、後進の育成という形で活かせます。', episode: '数字を作ってきた経験は、次の世代に営業の型を伝える仕事でも、確かな説得力を持ちます。', tag: 'neutral',
+          detail: {
+            points: [
+              'OJTトレーナーに必要なのは知識量ではなく「自分がやってきたことを、後輩が再現できる形に翻訳する力」です。長年現場で培った営業の勘所を、言葉と型に落とし込める人材は多くありません。',
+              '新人育成の説得力は、教える側の実体験の厚みに左右されます。実際に数字を作ってきた経験は、理論だけでは出せない重みを持ちます。',
+              '近年、多くの企業が体系的なOJT体制の構築に力を入れており、現場経験者による育成人材へのニーズが高まっています。',
+            ],
+            links: [
+              { title: 'OJTトレーナー研修とは？目的・カリキュラム・効果まで徹底解説', url: 'https://workhappiness.co.jp/blog/training/ojt-trainer-training/' },
+              { title: '【現場任せから脱却】新人・若手が定着する「OJTトレーナー研修」', url: 'https://www.bcon.jp/%E3%82%B3%E3%83%A9%E3%83%A0/%E3%82%B3%E3%83%A9%E3%83%A0%E4%B8%80%E8%A6%A7/ojt-trainer-training/' },
+            ],
+          },
+        },
 ],
       uniqueSuggestion: { job: '司会業・MC', reason: '人前で場を盛り上げ、相手の反応を見ながら話を組み立てる力は、司会業でも活きます。', episode: '商談の場の空気を読み、間合いを取ってきた経験は、大勢の前で場を回す仕事にも意外なほどなじみます。' },
     },
@@ -1066,6 +1090,45 @@ document.addEventListener('DOMContentLoaded', () => {
     return entry.base + combo + (addOn ? addOn : '');
   }
 
+  /* 提案カードの「もっと詳しく知る」パネル。
+     detail(根拠の深掘り・参考記事リンク)を持つ提案にのみボタンを表示する。
+     参考記事リンクは、実在する記事のみを厳選して掲載している(架空の体験談は作らない方針)。 */
+  function renderSuggestionDetail(s) {
+    if (!s.detail) return '';
+    const pointsHtml = (s.detail.points || [])
+      .map((p) => `<li>${p}</li>`)
+      .join('');
+    const linksHtml = (s.detail.links || [])
+      .map((l) => `<li><a href="${l.url}" target="_blank" rel="noopener noreferrer">${l.title}</a></li>`)
+      .join('');
+    return `
+      <button type="button" class="suggestion-detail-toggle" aria-expanded="false">
+        もっと詳しく知る
+      </button>
+      <div class="suggestion-detail" hidden>
+        <p class="suggestion-detail-heading">なぜ向いているか、もう少し詳しく</p>
+        <ul class="suggestion-detail-points">${pointsHtml}</ul>
+        ${linksHtml ? `
+          <p class="suggestion-detail-heading">この仕事についてもっと知る</p>
+          <ul class="suggestion-detail-links">${linksHtml}</ul>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  // 提案カードの「もっと詳しく知る」ボタンは、結果画面ごとに動的に生成されるため、
+  // 親要素(result-body)にイベント委譲で1度だけリスナーを登録する
+  document.getElementById('result-body').addEventListener('click', (e) => {
+    const toggle = e.target.closest('.suggestion-detail-toggle');
+    if (!toggle) return;
+    const panel = toggle.nextElementSibling;
+    const isOpen = !panel.hidden;
+    panel.hidden = isOpen;
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    toggle.classList.toggle('is-open', !isOpen);
+    toggle.textContent = isOpen ? 'もっと詳しく知る' : '閉じる';
+  });
+
   function runDiagnosis() {
 
     const loadingEl = document.getElementById('result-loading');
@@ -1138,6 +1201,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <span class="suggestion-reason">${s.reason}</span>
           <span class="suggestion-episode">${s.episode}</span>
+          ${renderSuggestionDetail(s)}
         </div>
       `).join('');
 
