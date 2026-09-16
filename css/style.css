@@ -1,5 +1,5 @@
 /* ==========================================================================
-   エミの運命道(仮) — 40代の可能性診断サイト
+   えもの運命堂(仮) — 40代の可能性診断サイト
    デザインコンセプト: 積み重ねた年輪を、次の道へ翻訳する
    白と青を基調に、占い感・転職サイト感を出さない
    ========================================================================== */
@@ -68,7 +68,19 @@ button { font-family: inherit; }
   font-size: 0.9rem;
   color: var(--muted);
   letter-spacing: 0.06em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.mini-header .about-link {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+.mini-header .about-link:hover { opacity: 1; }
 
 /* ==========================================================================
    年輪モチーフ(装飾SVG)
