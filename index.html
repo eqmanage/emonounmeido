@@ -25,7 +25,10 @@
 </head>
 <body>
 
-<div class="mini-header">えもの運命堂<span style="opacity:.6;">(仮)</span></div>
+<div class="mini-header">
+  <span>えもの運命堂<span style="opacity:.6;">(仮)</span></span>
+  <a href="about.html" class="about-link">このサイトについて</a>
+</div>
 
 <main class="container">
 
@@ -137,6 +140,19 @@
         <span class="question-hint" id="q-wish-hint">思いつかなければ、気になる分野やキーワードだけでも構いません</span>
         <div class="choice-stack" id="q-wish-choices"></div>
         <input type="text" id="q-wish-other" class="q-job-other" placeholder="気になる仕事やキーワードを入力してください" style="display:none; margin-top:0.7rem;">
+      </div>
+
+      <div class="question-block" id="priority-block">
+        <label class="question-label">これから先、どちらかというと大事にしたいのは？</label>
+        <span class="question-hint">近いものを1つ選んでください</span>
+        <div class="choice-stack" id="q-priority">
+          <button type="button" class="choice-card" data-value="comfort">無理なく続けられる、心と時間の余裕</button>
+          <button type="button" class="choice-card" data-value="reward">今より高い収入や、正当な評価</button>
+          <button type="button" class="choice-card" data-value="stimulation">新しいことに挑戦できる刺激</button>
+          <button type="button" class="choice-card" data-value="contribution">誰かの役に立っている実感</button>
+          <button type="button" class="choice-card" data-value="autonomy">自分の裁量で決められる自由さ</button>
+          <button type="button" class="choice-card" data-value="none">特にこだわりはない</button>
+        </div>
       </div>
 
       <div class="step-actions">
