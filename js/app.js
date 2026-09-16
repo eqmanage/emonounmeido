@@ -1163,8 +1163,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const shareJob = selectedSuggestions[0].job;
+      const shareScore = scores[0];
       const shareText = `私の経験は「${shareJob}」に翻訳されました。｜えもの運命堂`;
-      const shareUrl = window.location.href.split('#')[0];
+      // 結果ごとに異なるOGP画像を出すため、シェア用のURLは診断ページ自身ではなく、
+      // 職種名・適合度をcrawlerにも伝えられる中継ページ(Vercel)に向ける
+      const shareUrl = `https://emonounmeido-ogp.vercel.app/api/share?job=${encodeURIComponent(shareJob)}&score=${shareScore}`;
 
       document.getElementById('share-x').href =
         `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
